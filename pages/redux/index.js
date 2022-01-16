@@ -1,5 +1,5 @@
-import { createStore, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
+// import { createStore, applyMiddleware } from 'redux';
+// import thunk from 'redux-thunk';
 
 export function increment() {
   return {
@@ -107,9 +107,11 @@ export function reducer(state = initialState, action) {
         bookmark_character: [...state.bookmark_character, action.payload],
       };
     case 'UNBOOKMARK_SINGLE_CHARACTER':
-      let arr = [...state.bookmark_character];
-      let result = arr.filter((data) => data.char_id !== action.payload);
+      let result = state.bookmark_character.filter(
+        (data) => data.char_id !== action.payload
+      );
       return {
+        ...state,
         bookmark_character: [...result],
       };
     case 'EMPTY_CHARACTERS':
@@ -141,6 +143,7 @@ export function reducer(state = initialState, action) {
   }
 }
 
-const store = createStore(reducer, applyMiddleware(thunk));
-store.subscribe(() => console.log('store', store.getState()));
-export default store;
+// Incase we are not using redux persist
+// const store = createStore(reducer, applyMiddleware(thunk));
+// store.subscribe(() => console.log('store', store.getState()));
+// export default store;

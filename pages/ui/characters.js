@@ -2,13 +2,13 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getCharacters, bookmarkSingleCharacter } from '../redux';
 
-const Characters = () => {
-  const datas = useSelector((state) => state);
-  const dispatch = useDispatch();
-
+const Characters = ({ data }) => {
   useEffect(() => {
     dispatch(getCharacters());
   }, []);
+
+  const datas = useSelector((state) => state);
+  const dispatch = useDispatch();
 
   return (
     <div
@@ -23,8 +23,8 @@ const Characters = () => {
           gridAutoRows: 'minmax(100px, auto)',
         }}
       >
-        {datas.characters.length > 0 &&
-          datas.characters[0].map((data, idx) => (
+        {datas.characters[0] &&
+          datas.characters[0]?.map((data, idx) => (
             <div
               key={idx}
               style={{ border: '1px solid black', borderRadius: '10px' }}

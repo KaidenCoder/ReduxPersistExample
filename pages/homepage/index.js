@@ -1,19 +1,23 @@
-import { Router, useRouter } from 'next/router';
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import Navbar from '../../components/navbar';
-import {} from '../redux';
 import Characters from '../ui/characters';
 import Starwars from '../ui/starwars';
 
-const HomePage = () => {
-  const Router = useRouter();
+const HomePage = ({ data }) => {
   return (
     <div>
       <Navbar />
-      <Characters />
+      <Characters data={data} />
     </div>
   );
 };
 
+export async function getServerSideProps() {
+  // Fetch data from external API
+  const res = await fetch('https://www.breakingbadapi.com/api/characters');
+  const data = await res.json();
+
+  // Pass data to the page via props
+  return { props: { data } };
+}
 export default HomePage;
