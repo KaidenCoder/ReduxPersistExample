@@ -1,36 +1,39 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getCharacters, emptyCharacters } from '../redux';
-import Image from 'next/image';
-import { replaceBasePath } from 'next/dist/server/router';
+import { getCharacters, bookmarkSingleCharacter } from '../redux';
 
 const Characters = () => {
   const datas = useSelector((state) => state);
-  console.log('characters', datas.characters);
   const dispatch = useDispatch();
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <div>
-        <button onClick={() => dispatch(getCharacters())}>Characters</button>
-        <button onClick={() => dispatch(emptyCharacters())}>
-          Empty Characters
-        </button>
-      </div>
 
+  useEffect(() => {
+    dispatch(getCharacters());
+  }, []);
+
+  return (
+    <div
+      style={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}
+    >
       <div
         style={{
           display: 'grid',
-          margin: '1em',
+          margin: '2em',
           gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '10px',
-          gridAutoRows: 'minmax(100px, auto);',
+          gap: '2em',
+          gridAutoRows: 'minmax(100px, auto)',
         }}
       >
-        {datas.characters[0] != undefined &&
+        {datas.characters.length > 0 &&
           datas.characters[0].map((data, idx) => (
-            <div key={idx}>
-              <img src={data.img} width="150" />
+            <div
+              key={idx}
+              style={{ border: '1px solid black', borderRadius: '10px' }}
+            >
+              <img src={data.img} width="100%" height="400px" alt={data.name} />
               <h4>{data.name}</h4>
+              <button onClick={() => dispatch(bookmarkSingleCharacter(data))}>
+                Bookmark
+              </button>
             </div>
           ))}
       </div>

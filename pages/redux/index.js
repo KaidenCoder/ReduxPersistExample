@@ -7,10 +7,15 @@ export function increment() {
   };
 }
 
+export function decrement() {
+  return {
+    type: 'DECREMENT',
+  };
+}
+
 export function getStarWars() {
   return (dispatch, getState) => {
     const { count, starwars } = getState();
-    console.log('count', count, starwars);
     const baseUrl = 'https://swapi.dev/api/people/';
     {
       count > 0 &&
@@ -47,13 +52,12 @@ export function emptyStarWars() {
 export function getCharacters() {
   return (dispatch, getState) => {
     const { characters } = getState();
-    const mealsUrl = 'https://www.breakingbadapi.com/api/characters';
+    const breakingbadAPI = 'https://www.breakingbadapi.com/api/characters';
     {
-      characters.length == 0 &&
-        fetch(mealsUrl)
+      characters != undefined &&
+        fetch(breakingbadAPI)
           .then((res) => res.json())
           .then((res) => {
-            console.log(res);
             dispatch({
               type: 'CHARACTERS',
               payload: res,
@@ -63,15 +67,23 @@ export function getCharacters() {
   };
 }
 
-export function emptyCharacters() {
+export function bookmarkSingleCharacter(data) {
   return {
-    type: 'EMPTY_CHARACTERS',
+    type: 'BOOKMARK_SINGLE_CHARACTER',
+    payload: data,
   };
 }
 
-export function decrement() {
+export function unbookmarkSingleCharacter(id) {
   return {
-    type: 'DECREMENT',
+    type: 'UNBOOKMARK_SINGLE_CHARACTER',
+    payload: id,
+  };
+}
+
+export function emptyCharacters() {
+  return {
+    type: 'EMPTY_CHARACTERS',
   };
 }
 
@@ -79,34 +91,45 @@ const initialState = {
   count: 10,
   starwars: [],
   characters: [],
+  bookmark_character: [],
 };
 
 export function reducer(state = initialState, action) {
   switch (action.type) {
-    case 'INCREMENT':
+    case 'CHARACTERS':
       return {
         ...state,
-        count: state.count + 1,
+        characters: [action.payload],
+      };
+    case 'BOOKMARK_SINGLE_CHARACTER':
+      return {
+        ...state,
+        bookmark_character: [...state.bookmark_character, action.payload],
+      };
+    case 'UNBOOKMARK_SINGLE_CHARACTER':
+      let arr = [...state.bookmark_character];
+      let result = arr.filter((data) => data.char_id !== action.payload);
+      return {
+        bookmark_character: [...result],
+      };
+    case 'EMPTY_CHARACTERS':
+      return {
+        characters: [],
       };
     case 'STARWARS':
       return {
         ...state,
         starwars: [...state.starwars, action.payload],
       };
-    case 'CHARACTERS':
-      return {
-        ...state,
-        characters: [...state.characters, action.payload],
-      };
     case 'EMPTY_STARWARS':
       return {
         ...state,
         starwars: [],
       };
-    case 'EMPTY_CHARACTERS':
+    case 'INCREMENT':
       return {
         ...state,
-        characters: [],
+        count: state.count + 1,
       };
     case 'DECREMENT':
       return {

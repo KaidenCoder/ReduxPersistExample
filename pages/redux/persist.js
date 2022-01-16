@@ -4,7 +4,7 @@ import storage from 'redux-persist/lib/storage';
 import { reducer } from '.';
 import thunk from 'redux-thunk';
 
-// storage.removeItem('persist:root'); for clearing the redux persist data
+//storage.removeItem('persist:root'); //for clearing the redux persist data
 const persistConfig = {
   key: 'root',
   storage,
