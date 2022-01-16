@@ -116,7 +116,8 @@ export function reducer(state = initialState, action) {
       };
     case 'EMPTY_CHARACTERS':
       return {
-        characters: [],
+        ...state,
+        bookmark_character: [],
       };
     case 'STARWARS':
       return {
